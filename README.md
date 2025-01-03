@@ -9,7 +9,10 @@ Currently, Utopia supports Windows, with plans to add macOS and Linux support in
 - [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#windows) (Preferably a recent version)
 
 ## Getting Started
-1. Clone the repository with all its submodules: `git clone --recurse-submodules https://github.com/92half99/Utopia`
+1. Clone the repository with all its submodules: 
+
+`git clone --recurse-submodules https://github.com/92half99/Utopia`
+
 2. Run `scripts/Setup.bat` to generate Visual Studio 2022 solution and project files.
 3. Open the solution and run the UtopiaApp project to explore a basic example (found in UtopiaApp.cpp).
 
