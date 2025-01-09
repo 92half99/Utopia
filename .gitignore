@@ -11,16 +11,16 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
+# Compiled Dynamic Libraries
 *.so
 *.dylib
 *.dll
 
-# Fortran module files
+# Fortran Module Files
 *.mod
 *.smod
 
-# Compiled Static libraries
+# Compiled Static Libraries
 *.lai
 *.la
 *.a
@@ -30,3 +30,21 @@
 *.exe
 *.out
 *.app
+
+# Directories
+.vs/
+bin/
+bin-int/
+
+# Project Files
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+*.sln
+
+# Log and Config Files
+*.log
+*.ini
+
+# Exclude
+!vendor/
