@@ -16,3 +16,6 @@
 [submodule "vendor/glfw"]
 	path = vendor/glfw
 	url = https://github.com/92half99/glfw
+[submodule "Utopia-Modules/Utopia-Networking"]
+	path = Utopia-Modules/Utopia-Networking
+	url = https://github.com/92half99/Utopia-Networking
