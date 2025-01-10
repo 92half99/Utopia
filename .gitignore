@@ -33,6 +33,7 @@
 
 # Directories
 .vs/
+bin/
 bin-int/
 
 # Project Files
