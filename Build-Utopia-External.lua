@@ -21,6 +21,7 @@ group ""
 
 group "Core"
     include "Utopia/Build-Utopia.lua"
+    
     -- Optional modules
     if os.isfile("Utopia-Modules/Utopia-Networking/Build-Utopia-Networking.lua") then
         include "Utopia-Modules/Utopia-Networking/Build-Utopia-Networking.lua"
