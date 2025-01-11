@@ -70,9 +70,6 @@ namespace Utopia {
             // Calculate new timestep
             float time = GetTime();
             m_FrameTime = time - m_LastFrameTime;
-            // You can use std::min if you #include <algorithm>:
-            //   m_TimeStep = std::min(m_FrameTime, 0.0333f);
-            // or if you rely on GLM:
             m_TimeStep = glm::min<float>(m_FrameTime, 0.0333f);
             m_LastFrameTime = time;
         }
