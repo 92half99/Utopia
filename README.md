@@ -2,7 +2,7 @@
 
 Utopia is a lightweight application framework built with Dear ImGui and designed to integrate seamlessly with Vulkan. This combination enables the effortless blending of real-time Vulkan rendering with a powerful UI library to create desktop applications. The goal is to expand Utopia with utilities to simplify the development of immediate-mode desktop apps and straightforward Vulkan-based applications.
 
-Currently, Utopia supports Windows, with plans to add macOS and Linux support in the future. The setup scripts provided are tailored for Visual Studio 2022.
+Currently, Utopia supports Windows, macOS and Linux. The setup scripts provided are tailored for Visual Studio 2022.
 
 ## Requirements
 - [Visual Studio 2022](https://visualstudio.com) (Setup scripts are designed for this IDE.)
