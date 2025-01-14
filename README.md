@@ -5,7 +5,7 @@ Utopia is a lightweight application framework built with Dear ImGui and designed
 Currently, Utopia supports Windows, with plans to add macOS and Linux support in the future. The setup scripts provided are tailored for Visual Studio 2022.
 
 ## Requirements
-- [Visual Studio 2022](https://visualstudio.com) (Optional: Setup scripts are designed for this IDE.)
+- [Visual Studio 2022](https://visualstudio.com) (Setup scripts are designed for this IDE.)
 - [Vulkan SDK](https://vulkan.lunarg.com/sdk/home#windows) (Preferably a recent version)
 
 ## Getting Started
