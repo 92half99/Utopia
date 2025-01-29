@@ -12,7 +12,8 @@
 #include <filesystem>
 
 #include "imgui.h"
-#include "vulkan/vulkan.h"
+#include "backends/imgui_impl_vulkan.h"
+#include "vulkan/vulkan.hpp"
 
 void check_vk_result(VkResult err);
 
@@ -63,6 +64,8 @@ namespace Utopia {
 
 		void PushLayer(const std::shared_ptr<Layer>& layer) { m_LayerStack.emplace_back(layer); layer->OnAttach(); }
 
+		const std::vector<std::shared_ptr<Layer>>& GetLayerStack() const { return m_LayerStack; }
+
 		void Close();
 
 		bool IsMaximized() const;
@@ -88,6 +91,9 @@ namespace Utopia {
 		{
 			m_EventQueue.push(func);
 		}
+
+		static ImGui_ImplVulkanH_Window* GetMainWindowData();
+		static VkCommandBuffer GetActiveCommandBuffer();
 	private:
 		void Init();
 		void Shutdown();

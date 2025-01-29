@@ -12,12 +12,12 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_vulkan.h"
 
-#include <stdio.h>          // printf, fprintf
-#include <stdlib.h>         // abort
+#include <stdio.h>
+#include <stdlib.h>
 #define GLFW_INCLUDE_NONE
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 #include <glm/glm.hpp>
 
 #include "ImGui/ImGuiTheme.hpp"
@@ -62,6 +62,8 @@ static bool                     g_SwapChainRebuild = false;
 // Per-frame-in-flight
 static std::vector<std::vector<VkCommandBuffer>> s_AllocatedCommandBuffers;
 static std::vector<std::vector<std::function<void()>>> s_ResourceFreeQueue;
+
+static VkCommandBuffer s_ActiveCommandBuffer = nullptr;
 
 // Unlike g_MainWindowData.FrameIndex, this is not the the swapchain image index
 // and is always guaranteed to increase (eg. 0, 1, 2, 0, 1, 2)
@@ -284,7 +286,7 @@ static void CleanupVulkanWindow()
 	ImGui_ImplVulkanH_DestroyWindow(g_Instance, g_Device, &g_MainWindowData, g_Allocator);
 }
 
-static void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
+static void FrameRender(Utopia::Application* application, ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
 {
 	VkResult err;
 
@@ -331,6 +333,7 @@ static void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
 		info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 		info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 		err = vkBeginCommandBuffer(fd->CommandBuffer, &info);
+		s_ActiveCommandBuffer = fd->CommandBuffer;
 		check_vk_result(err);
 	}
 	{
@@ -344,6 +347,9 @@ static void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
 		info.pClearValues = &wd->ClearValue;
 		vkCmdBeginRenderPass(fd->CommandBuffer, &info, VK_SUBPASS_CONTENTS_INLINE);
 	}
+
+	for (auto& layer : application->GetLayerStack())
+		layer->OnRender();
 
 	// Record dear imgui primitives into command buffer
 	ImGui_ImplVulkan_RenderDrawData(draw_data, fd->CommandBuffer);
@@ -363,6 +369,7 @@ static void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
 		info.pSignalSemaphores = &render_complete_semaphore;
 
 		err = vkEndCommandBuffer(fd->CommandBuffer);
+		s_ActiveCommandBuffer = nullptr;
 		check_vk_result(err);
 		err = vkQueueSubmit(g_Queue, 1, &info, fd->Fence);
 		check_vk_result(err);
@@ -979,7 +986,7 @@ namespace Utopia {
 			wd->ClearValue.color.float32[2] = clear_color.z * clear_color.w;
 			wd->ClearValue.color.float32[3] = clear_color.w;
 			if (!main_is_minimized)
-				FrameRender(wd, main_draw_data);
+				FrameRender(this, wd, main_draw_data);
 
 			// Update and Render additional Platform Windows
 			if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
@@ -1107,4 +1114,12 @@ namespace Utopia {
 		return s_Fonts.at(name);
 	}
 
+	ImGui_ImplVulkanH_Window* Application::GetMainWindowData()
+	{
+		return &g_MainWindowData;
+	}
+	VkCommandBuffer Application::GetActiveCommandBuffer()
+	{
+		return s_ActiveCommandBuffer;
+	}
 }
