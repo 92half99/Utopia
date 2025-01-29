@@ -16,9 +16,9 @@
 #define UT_ASSERT_MESSAGE_BOX (!UT_DIST && UT_PLATFORM_WINDOWS)
 
 #if UT_ASSERT_MESSAGE_BOX
-#ifdef UT_PLATFORM_WINDOWS
-#include <Windows.h>
-#endif
+    #ifdef UT_PLATFORM_WINDOWS
+        #include <Windows.h>
+    #endif
 #endif
 
 namespace Utopia {
@@ -30,7 +30,7 @@ namespace Utopia {
         enum class Type : uint8_t
         {
             Core = 0,
-            Client
+            Client = 1
         };
 
         enum class Level : uint8_t
@@ -55,12 +55,12 @@ namespace Utopia {
         static void Shutdown() noexcept;
 
         // Accessors for the loggers
-        [[nodiscard]] static std::shared_ptr<spdlog::logger>& GetCoreLogger();
-        [[nodiscard]] static std::shared_ptr<spdlog::logger>& GetClientLogger();
+        [[nodiscard]] static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+        [[nodiscard]] static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
 
         // Tag management
-        [[nodiscard]] static bool HasTag(const std::string& tag);
-        [[nodiscard]] static std::map<std::string, TagDetails>& EnabledTags();
+        [[nodiscard]] static bool HasTag(const std::string& tag) { return s_EnabledTags.find(tag) != s_EnabledTags.end(); }
+        [[nodiscard]] static std::map<std::string, TagDetails>& EnabledTags() { return s_EnabledTags; }
 
         // Logging functions
         template<typename... Args>
@@ -97,7 +97,7 @@ namespace Utopia {
 
     // Implementation of variadic PrintMessageTag
     template<typename... Args>
-    void Log::PrintMessageTag(Type type, Level level, std::string_view tag, std::format_string<Args...> format, Args&&... args)
+    void Log::PrintMessageTag(Log::Type type, Log::Level level, std::string_view tag, const std::format_string<Args...> format, Args&&... args)
     {
         std::lock_guard<std::mutex> lock(s_Mutex);
 
